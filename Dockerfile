@@ -18,5 +18,13 @@ RUN cd / && git clone https://github.com/homdx/android_openssl.git && cd /androi
     build-android-gradle-project rssnews.pro --debug && \
     echo copy result apk && \
     cp -vf /app/qt-rssnews/src/android-build/build/outputs/apk/debug/android-build-debug.apk /app
+    
+RUN echo fix for upgrade version && cd /root && tar -xf adbkey.tar.gz && cd /app/qt-rssnews/src && make clean && rm -rf android-build && export ANDROID_TARGET_SDK_VERSION=28 && \
+    echo run2 && build-android-gradle-project rssnews.pro --debug && \
+    echo 'fix missing libc++_shared.so' && cp -vf /android-ndk-r17c/sources/cxx-stl/llvm-libc++/libs/armeabi-v7a/libc++_shared.so android-build/libs/armeabi-v7a/ && \
+    echo mkdir /android-ndk-r20/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi-v7a -pv && \
+    build-android-gradle-project rssnews.pro --debug && \
+    echo copy result apk && \
+    cp -vf /app/qt-rssnews/src/android-build/build/outputs/apk/debug/android-build-debug.apk /app
 
 CMD tail -f /var/log/faillog
